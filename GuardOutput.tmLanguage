@@ -48,7 +48,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>Running all specs|Running: .+|Running tests(\s+with\s+args\s+\[.*\]\.*\n)?</string>
+			<string>Started|Running all specs|Running: .+|Running tests(\s+with\s+args\s+\[.*\]\.*\n)?</string>
 			<key>comment</key>
 			<string>dots painting</string>
 			<key>end</key>
@@ -60,6 +60,12 @@
 					<string>\.+|passed</string>
 					<key>name</key>
 					<string>test.pass.rspec_output</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>S+</string>
+					<key>name</key>
+					<string>test.comment.rspec_output</string>
 				</dict>
 				<dict>
 					<key>match</key>
@@ -77,13 +83,49 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>\s+\d+\)\s+[\w+:#\s\-\/\.',?!]+</string>
+			<string>\s+\d+\)\s+Skipped:</string>
 			<key>comment</key>
-			<string>failure tracebacks</string>
+			<string>minitest skip tracebacks</string>
+			<key>contentName</key>
+			<string>test.comment</string>
+			<key>end</key>
+			<string>^$</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>test.comment.rspec_output</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>\s+\d+\)\s+Failure:</string>
+			<key>comment</key>
+			<string>minitest failure tracebacks</string>
 			<key>contentName</key>
 			<string>test.fail</string>
 			<key>end</key>
-			<string>[.#]*(#\s+[.\w\/:#\s`\(\)&lt;&gt;]+')</string>
+			<string>^$</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>test.comment.rspec_output</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>\s+\d+\)\s+Error:</string>
+			<key>comment</key>
+			<string>minitest error tracebacks</string>
+			<key>contentName</key>
+			<string>test.fail</string>
+			<key>end</key>
+			<string>$</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>0</key>
