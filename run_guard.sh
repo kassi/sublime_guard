@@ -37,11 +37,11 @@ function load_rvm_as_a_function() {
 }
 
 function run_guard() {
-  cmd="guard"
+  cmd="guard -i"
   cd "$1"
   if [[ $? -eq 0 ]] ; then
     if [[ -s "Gemfile" ]] ; then
-      cmd="bundle exec guard"
+      cmd="bundle exec $cmd"
     fi
     printf "Running '$cmd'. All output/failures from this point on is from the '$cmd' command.\n\n"
     $cmd
@@ -61,7 +61,7 @@ else # successfully loaded rvm
   printf "Found and Successfully loaded RVM as a function.\n"
   if [ -e "$1/.rvmrc" ]; then # found project specific .rvmrc
     printf "Found an .rvmrc in the project directory. Trying to load it...\n"
-   
+
     cd "$1"
     rvm rvmrc load "$1"
     if [ $? -ne 0 ]; then # failed to load project specific .rvmrc
@@ -74,7 +74,7 @@ else # successfully loaded rvm
     fi
   else # failed to find project specific .rvmrc
     printf "Failed to find a project specific .rvmrc in $1.\n"
-    
+
     printf "Attempting to switch to default RVM enviornment.\n"
     rvm use default
     if [ $? -ne 0 ]; then # failed to switch to the users default gemset
