@@ -4,7 +4,25 @@ import sys
 import os
 import subprocess
 import threading
+import re
 
+ansi_pattern = '(\x1b\[|\x9b)[^@-_]*[@-_m]|\x1b\][0-9];|\x1b[@-_]|[\x07-\x08]|\?1034h'
+ansi_eng = re.compile(ansi_pattern)
+
+def strip_escape(string=''):
+    lastend = 0
+    matches = []
+    newstring = str(string)
+    for match in ansi_eng.finditer(string):
+        start = match.start()
+        end = match.end()
+        matches.append(match)
+    matches.reverse()
+    for match in matches:
+        start = match.start()
+        end = match.end()
+        string = string[0:start] + string[end:]
+    return string
 
 class GuardWrapper:
     def __init__(self):
@@ -51,7 +69,7 @@ class GuardWrapper:
         while True:
             data = os.read(self.proc.stdout.fileno(), 2 ** 15)
             if data != "":
-                sys.stdout.write(data)
+                sys.stdout.write(strip_escape(data))
                 sys.stdout.flush()
             else:
                 self.proc.stdout.close()
@@ -62,7 +80,7 @@ class GuardWrapper:
         while True:
             data = os.read(self.proc.stderr.fileno(), 2 ** 15)
             if data != "":
-                sys.stderr.write(data)
+                sys.stderr.write(strip_escape(data))
                 sys.stderr.flush()
             else:
                 self.proc.stderr.close()
