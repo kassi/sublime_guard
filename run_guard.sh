@@ -37,7 +37,7 @@ function load_rvm_as_a_function() {
 }
 
 function run_guard() {
-  cmd="guard -i"
+  cmd="guard"
   cd "$1"
   if [[ $? -eq 0 ]] ; then
     if [[ -s "Gemfile" ]] ; then
